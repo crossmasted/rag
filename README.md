@@ -6,9 +6,9 @@
 
 ## 界面预览
 
-![系统架构图](docs/images/architecture.svg)
+![首页截图](docs/images/screenshot.png)
 
-> 首页截图（待补）
+![系统架构图](docs/images/architecture.svg)
 
 ## 快速启动（Windows 原生模式）
 
