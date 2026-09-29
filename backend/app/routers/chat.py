@@ -126,7 +126,11 @@ async def event_stream(query: str, user: User):
                 gen_stream = iter(chunk['message']['content'] for chunk in gen_stream)
 
             for content in gen_stream:
-                yield f"data: {json.dumps({'type': 'token', 'content': content})}\n\n"
+                if settings.LLM_PROVIDER == "dashscope":
+                    # stream_dashscope 已产出完整的 SSE 事件字符串，直接透传
+                    yield content
+                else:
+                    yield f"data: {json.dumps({'type': 'token', 'content': content})}\n\n"
 
             t4 = time.monotonic()
             print(f"[timing] gen={t4 - t3:.2f}s total={t4 - t0:.2f}s", flush=True)
