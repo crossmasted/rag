@@ -1,0 +1,1 @@
+FROM ./bge-m3-FP16.gguf
