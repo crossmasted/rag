@@ -15,6 +15,7 @@ tools/ollama-data/
 
 # ===== 运行时数据 =====
 tools/qdrant/storage/
+.qdrant-initialized
 *.log
 
 # ===== Python 缓存 =====

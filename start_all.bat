@@ -11,7 +11,7 @@ set "ROOT=%~dp0"
 
 echo === Start local RAG system (native mode, no Docker) ===
 echo.
-echo Opening 4 windows: Ollama / Qdrant / Backend / Frontend
+echo Opening 5 windows: MySQL / Ollama / Qdrant / Backend / Frontend
 echo Close a window to stop that single service.
 echo.
 
@@ -20,6 +20,11 @@ REM Do NOT use `cmd /k "title X && <script>"` here: that builds a command STRING
 REM which cmd parses at the current console code page, and %ROOT% injects
 REM non-ASCII bytes into it, corrupting the && chain. A plain file path is
 REM resolved natively, so it is immune to that problem.
+start "RAG-MySQL" "%ROOT%start_mysql.bat"
+
+REM Give MySQL a head start; the backend needs it up before startup.
+ping -n 6 127.0.0.1 >nul
+
 start "RAG-Ollama" "%ROOT%start_ollama.bat"
 
 REM Give Ollama a head start. ping replaces timeout, because timeout fails with
@@ -43,9 +48,9 @@ REM The startup above is serial and the backend takes ~15-20s to be ready.
 REM Fixed sleeps are unreliable: a question asked right after the windows open
 REM hits a not-yet-ready backend and the frontend reports a connection error.
 REM Poll the two ports instead, and only then print the "ready" message.
-powershell -NoProfile -Command "for ($i = 0; $i -lt 30; $i++) { $p = (Get-NetTCPConnection -State Listen -LocalPort 8000,5173 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty LocalPort -Unique); if (($p -contains 8000) -and ($p -contains 5173)) { exit 0 }; Start-Sleep -Seconds 2 }; exit 1"
+powershell -NoProfile -Command "for ($i = 0; $i -lt 30; $i++) { $p = (Get-NetTCPConnection -State Listen -LocalPort 3306,8000,5173 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty LocalPort -Unique); if (($p -contains 3306) -and ($p -contains 8000) -and ($p -contains 5173)) { exit 0 }; Start-Sleep -Seconds 2 }; exit 1"
 if errorlevel 1 (
-    echo WARNING: some services are not ready yet. Check the four windows.
+    echo WARNING: some services are not ready yet. Check the five windows.
 ) else (
     echo All services ready. Open http://localhost:5173
 )

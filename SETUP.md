@@ -8,6 +8,7 @@
 - Windows 10 / 11
 - 磁盘预留约 25 GB（模型 + 运行环境）
 - 建议有 NVIDIA 显卡（4 GB 显存以上）；没有也能跑，但只能走 CPU，速度会慢很多
+- MySQL 8.x（登录功能必需，见第 4 步）
 
 ---
 
@@ -89,10 +90,37 @@ cd frontend
 start_all.bat
 ```
 
-脚本会依次打开 4 个窗口（Ollama / Qdrant / 后端 / 前端），等待服务就绪后**自动把两个模型预加载进显存**，
-然后访问 http://localhost:5173 即可提问。
+脚本会依次打开 5 个窗口（MySQL / Ollama / Qdrant / 后端 / 前端），等待服务就绪后**自动把两个模型预加载进显存**，
+然后访问 http://localhost:5173 注册账号并登录后即可提问。
 
 停止全部服务：双击 `stop_all.bat`。
+
+---
+
+## 第 4 步：MySQL 初始化（登录功能必需）
+
+登录功能把用户账号存在 MySQL 里，首次使用前需要建库和建应用账号（只需执行一次）：
+
+1. 启动 MySQL：双击 `start_mysql.bat`（如果 MySQL 不在 `D:\MySQL\mysql-8.0.26-winx64`，先编辑脚本里的 `MYSQL_HOME`）。
+2. 用 root 进入控制台：
+
+```bat
+D:\MySQL\mysql-8.0.26-winx64\bin\mysql.exe -uroot -p
+```
+
+3. 输入你的 root 密码后，执行下面 4 条语句：
+
+```sql
+CREATE DATABASE IF NOT EXISTS rag_kb DEFAULT CHARACTER SET utf8mb4;
+CREATE USER IF NOT EXISTS 'rag'@'localhost' IDENTIFIED BY 'rag_pass';
+GRANT ALL PRIVILEGES ON rag_kb.* TO 'rag'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+4. 复制 `.env.example` 为 `.env`，按需修改 MySQL 与 JWT 配置（`.env` 已被 .gitignore 排除，不会上传）。
+   - `MYSQL_*` 与本项目 `.env` 默认值一致时无需改动。
+   - `JWT_SECRET` 改成随机长字符串（生产环境必改）。
+5. 忘了 root 密码？MySQL 官方 `--init-file` 方式重置，不要用 `skip-grant-tables`（8.0.26 在 Windows 上会禁掉 TCP 连接）。
 
 ---
 
@@ -101,6 +129,7 @@ start_all.bat
 | 现象 | 原因与解决 |
 | --- | --- |
 | 提问报「连接失败，请重试」 | 服务还没启动完。等 `start_all.bat` 提示 All services ready 后再提问 |
+| 登录/注册时报数据库连接失败 | MySQL 没启动（先开 `start_mysql.bat`），或 `.env` 的 `MYSQL_*` 与第 4 步建的不一致 |
 | 后端窗口一闪而过 | .bat 被改坏了。脚本必须是 **CRLF 换行 + 纯 ASCII**，否则中文路径会让 cmd 解析错乱 |
 | 回答很慢（几十秒） | 没走 GPU。检查 `nvidia-smi` 驱动版本 ≥ 530；4 GB 显存可同时放下 3b + bge-m3 |
 | `Unexpected token '??='` | Node 版本太低，必须用 `tools\node20` 里的 Node 20 |

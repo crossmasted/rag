@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import documents, chat
+from app.routers import documents, chat, auth
 from app.services.vector_store import vector_store
 from app.services.embeddings import embedding_service
+from app.core.db import Base, engine
+from app import models  # noqa: F401  确保模型已注册
 
 app = FastAPI(title="RAG 知识库系统")
 
@@ -18,12 +20,16 @@ app.add_middleware(
 )
 
 # 注册路由
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(documents.router, prefix="/api/documents", tags=["documents"])
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 
+
 @app.on_event("startup")
 async def startup_event():
-    """启动时初始化向量库"""
+    """启动时初始化数据库表与向量库"""
+    # 建表（若 MySQL 未连上会在此报错，便于快速发现）
+    Base.metadata.create_all(bind=engine)
     # 获取 embedding 维度并创建集合
     test_embedding = await embedding_service.get_embedding("test")
     vector_store.create_collection(dimension=len(test_embedding))
