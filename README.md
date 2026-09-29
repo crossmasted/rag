@@ -100,5 +100,5 @@ ollama create qwen2.5:3b -f Modelfile
 ### 云端部署（阿里云 + DashScope）
 
 本地模式用 Ollama 生成回答；上云时无需搬运 20 GB 模型，把 `.env` 里的 `LLM_PROVIDER` 改为 `dashscope` 并填上
-`DASHSCOPE_API_KEY` 即可改用通义千问 API（qwen-plus）生成回答，向量化仍走本地 Ollama bge-m3（或改用云向量库）。
-MySQL 可改用阿里云 RDS，在 `.env` 中修改 `MYSQL_HOST` 等配置即可，代码无需改动。
+`DASHSCOPE_API_KEY` 即可整体切换为通义千问 API：生成走 qwen-plus、向量化走 text-embedding-v3（维度 1024，与本地
+bge-m3 对齐，代码零改动）。MySQL 可改用阿里云 RDS，在 `.env` 中修改 `MYSQL_HOST` 等配置即可。

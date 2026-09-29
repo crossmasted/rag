@@ -18,6 +18,8 @@ class Settings:
     # DashScope（通义千问）API Key，仅 LLM_PROVIDER=dashscope 时使用
     DASHSCOPE_API_KEY: str = os.getenv("DASHSCOPE_API_KEY", "")
     DASHSCOPE_MODEL: str = os.getenv("DASHSCOPE_MODEL", "qwen-plus")
+    # DashScope 向量化模型（LLM_PROVIDER=dashscope 时用于文档嵌入，维度 1024 与 bge-m3 对齐）
+    DASHSCOPE_EMBED_MODEL: str = os.getenv("DASHSCOPE_EMBED_MODEL", "text-embedding-v3")
 
     # Qdrant
     QDRANT_HOST: str = os.getenv("QDRANT_HOST", "localhost")
