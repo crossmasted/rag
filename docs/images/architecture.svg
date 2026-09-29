@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="460" viewBox="0 0 860 460" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+  <defs>
+    <linearGradient id="hd" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b5876"/>
+      <stop offset="1" stop-color="#4e4376"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7a8ca0"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="860" height="460" rx="14" fill="#f7f9fc"/>
+
+  <!-- Title -->
+  <text x="430" y="36" font-size="20" font-weight="bold" fill="#20283a" text-anchor="middle">RAG 知识库问答系统架构图</text>
+
+  <!-- User / Browser -->
+  <rect x="30" y="70" width="200" height="86" rx="10" fill="#ffffff" stroke="#c9d4e4" stroke-width="2"/>
+  <text x="130" y="104" font-size="16" font-weight="bold" fill="#2b5876" text-anchor="middle">用户浏览器</text>
+  <text x="130" y="132" font-size="13" fill="#5a6b86" text-anchor="middle">Vue3 + Element Plus</text>
+  <text x="130" y="150" font-size="12" fill="#8a99b0" text-anchor="middle">http://localhost:5173</text>
+
+  <!-- Backend -->
+  <rect x="330" y="70" width="200" height="86" rx="10" fill="url(#hd)"/>
+  <text x="430" y="104" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">FastAPI 后端</text>
+  <text x="430" y="132" font-size="13" fill="#e3e9f4" text-anchor="middle">文档解析 · 流式问答</text>
+  <text x="430" y="150" font-size="12" fill="#b9c6e0" text-anchor="middle">http://localhost:8000</text>
+
+  <!-- Http between browser & backend -->
+  <line x1="230" y1="113" x2="330" y2="113" stroke="#7a8ca0" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="330" y1="100" x2="230" y2="100" stroke="#7a8ca0" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="280" y="90" font-size="12" fill="#8a99b0" text-anchor="middle">HTTP / SSE</text>
+
+  <!-- Ollama -->
+  <rect x="330" y="240" width="200" height="150" rx="10" fill="#ffffff" stroke="#2b5886" stroke-width="2"/>
+  <text x="430" y="268" font-size="16" font-weight="bold" fill="#2b5876" text-anchor="middle">Ollama 本地模型</text>
+  <text x="430" y="290" font-size="12" fill="#7a8ca0" text-anchor="middle">http://localhost:11434</text>
+  <rect x="352" y="305" width="158" height="30" rx="6" fill="#eef4fb" stroke="#c9d4e4"/>
+  <text x="431" y="326" font-size="13" fill="#2b5886" text-anchor="middle">qwen2.5:3b（生成）</text>
+  <rect x="352" y="345" width="158" height="30" rx="6" fill="#eef4fb" stroke="#c9d4e4"/>
+  <text x="431" y="366" font-size="13" fill="#2b5886" text-anchor="middle">bge-m3（向量嵌入）</text>
+
+  <!-- Qdrant -->
+  <rect x="620" y="240" width="200" height="150" rx="10" fill="#ffffff" stroke="#2b5886" stroke-width="2"/>
+  <text x="720" y="268" font-size="16" font-weight="bold" fill="#2b5876" text-anchor="middle">Qdrant 向量库</text>
+  <text x="720" y="290" font-size="12" fill="#7a8ca0" text-anchor="middle">http://localhost:6333</text>
+  <rect x="648" y="305" width="144" height="30" rx="6" fill="#eef4fb" stroke="#c9d4e4"/>
+  <text x="720" y="326" font-size="13" fill="#2b5886" text-anchor="middle">文档向量 + 元数据</text>
+  <rect x="648" y="345" width="144" height="30" rx="6" fill="#eef4fb" stroke="#c9d4e4"/>
+  <text x="720" y="366" font-size="13" fill="#2b5886" text-anchor="middle">权限过滤检索</text>
+
+  <!-- Backend -> Ollama (Embedding) -->
+  <line x1="430" y1="156" x2="430" y2="240" stroke="#7a8ca0" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="470" y="202" font-size="12" fill="#8a99b0" text-anchor="middle">文本 → 向量 / 生成回答</text>
+
+  <!-- Backend -> Qdrant -->
+  <line x1="530" y1="156" x2="620" y2="240" stroke="#7a8ca0" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="620" y1="252" x2="530" y2="240" stroke="#7a8ca0" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="568" y="206" font-size="12" fill="#8a99b0" text-anchor="middle">存取向量</text>
+
+  <!-- Docs / Upload -->
+  <rect x="30" y="330" width="200" height="60" rx="10" fill="#ffffff" stroke="#c9d4e4" stroke-width="2"/>
+  <text x="130" y="358" font-size="15" font-weight="bold" fill="#2b5876" text-anchor="middle">文档上传</text>
+  <text x="130" y="378" font-size="12" fill="#5a6b86" text-anchor="middle">Markdown / PDF</text>
+
+  <line x1="230" y1="360" x2="330" y2="300" stroke="#7a8ca0" stroke-width="2" marker-end="url(#arr)" stroke-dasharray="4 3"/>
+  <text x="258" y="352" font-size="12" fill="#8a99b0" text-anchor="middle">分块解析</text>
+</svg>

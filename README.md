@@ -4,6 +4,12 @@
 
 > **刚 clone 本项目？** 仓库不含模型和环境文件（约 20 GB），请先按 [SETUP.md](SETUP.md) 完成 3 步准备再启动。
 
+## 界面预览
+
+![系统架构图](docs/images/architecture.svg)
+
+> 首页截图（待补）
+
 ## 快速启动（Windows 原生模式）
 
 无需 Docker，双击即可，一键启停：
