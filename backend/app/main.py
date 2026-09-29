@@ -5,6 +5,7 @@ from app.services.vector_store import vector_store
 from app.services.embeddings import embedding_service
 from app.core.db import Base, engine
 from app import models  # noqa: F401  确保模型已注册
+from app.core.config import settings
 
 app = FastAPI(title="RAG 知识库系统")
 
@@ -31,6 +32,11 @@ async def startup_event():
     # 建表（若 MySQL 未连上会在此报错，便于快速发现）
     Base.metadata.create_all(bind=engine)
     # 获取 embedding 维度并创建集合
+    # dashscope 模式下未配置 API Key 时跳过向量库初始化，避免启动即崩；
+    # 补齐 Key 后重启服务即可正常初始化。
+    if settings.LLM_PROVIDER == "dashscope" and not settings.DASHSCOPE_API_KEY:
+        print("SKIP: LLM_PROVIDER=dashscope but DASHSCOPE_API_KEY is empty, skip vector store init")
+        return
     test_embedding = await embedding_service.get_embedding("test")
     vector_store.create_collection(dimension=len(test_embedding))
 

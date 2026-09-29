@@ -54,6 +54,11 @@ class EmbeddingService:
         显式指定 dimensions=1024，与本地 bge-m3 的向量维度保持一致，
         保证同一 Qdrant 集合内的向量维度兼容。
         """
+        if not settings.DASHSCOPE_API_KEY:
+            raise RuntimeError(
+                "未配置 DASHSCOPE_API_KEY：请在 .env 中填写 DashScope API Key "
+                "（百炼平台 https://bailian.console.aliyun.com 获取）"
+            )
         headers = {
             "Authorization": f"Bearer {settings.DASHSCOPE_API_KEY}",
             "Content-Type": "application/json",
