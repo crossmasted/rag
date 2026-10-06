@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import documents, chat, auth
+from app.routers import documents, chat, auth, visits
 from app.services.vector_store import vector_store
 from app.services.embeddings import embedding_service
 from app.core.db import Base, engine
@@ -24,6 +24,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(documents.router, prefix="/api/documents", tags=["documents"])
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
+app.include_router(visits.router, prefix="/api/visits", tags=["visits"])
 
 
 @app.on_event("startup")
